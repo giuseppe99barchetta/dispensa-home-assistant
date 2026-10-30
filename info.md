@@ -2,7 +2,7 @@
 
 # Dispensa for Home Assistant
 
-Local, read-only integration for Home Assistant dashboards and automations. It exposes lunch and dinner with images and recipe details, expiry alerts, low stock, the shopping list, available preparations, and operations requiring review.
+Local, read-only integration for Home Assistant dashboards and automations. It exposes lunch and dinner with images and recipe details, expiry alerts, low stock, the shopping list, thaw reminders, available preparations, and operations requiring review.
 
 Requires an up-to-date Dispensa server reachable from Home Assistant. HACS installs only the integration; install and update Dispensa separately. After downloading, restart Home Assistant and add **Dispensa** under **Settings → Devices & services**.
 

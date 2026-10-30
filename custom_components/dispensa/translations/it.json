@@ -8,6 +8,7 @@
     "lunch": {"name": "Pranzo di oggi"}, "dinner": {"name": "Cena di oggi"},
     "products": {"name": "Prodotti in dispensa"}, "expiring": {"name": "Lotti in scadenza"},
     "expired": {"name": "Lotti scaduti"}, "unknown_expiry": {"name": "Lotti con scadenza sconosciuta"}, "low_stock": {"name": "Prodotti sotto il minimo"},
-    "shopping": {"name": "Articoli da acquistare"}, "leftovers": {"name": "Preparazioni disponibili"}, "unresolved": {"name": "Operazioni da verificare"}
+    "shopping": {"name": "Articoli da acquistare"}, "thaw": {"name": "Prodotti da scongelare"}, "leftovers": {"name": "Preparazioni disponibili"}, "unresolved": {"name": "Operazioni da verificare"}
   }}
 }
+

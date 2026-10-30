@@ -26,6 +26,7 @@ Home Assistant 2026.3 and later can use the bundled `brand` icon. Some HACS vers
 - **Pantry products**, **expiring lots**, **expired lots**, **lots with unknown expiry** and **products below minimum**: counts from Grocy. Expiring means today through the following three days. Lists of lots and low-stock products are available as attributes. Unknown expiry is never treated as expired. When Grocy is unavailable, affected sensors become unavailable instead of reporting a misleading zero.
 - **Available preparations** and **operations to review**: preparations with remaining portions and rows representing pending or interrupted operations. The latter counts rows across Dispensa status categories, not necessarily distinct operations.
 - **Items to buy**: count of unchecked entries and the list as an attribute, recalculated for the current menu using current stock. The sensor is unavailable without a current menu or when Grocy is unreachable. Reading it does not change the list.
+- **Items to thaw**: count and `prodotti` attribute with freezer items matched to meals today or tomorrow. The sensor is unavailable when stock cannot be checked. Matches are suggestions: verify the product, amount and safe thawing method.
 
 Meal pictures come from the recipe's selected photo, the existing Dispensa photo cache, or a representative image from the bundled catalog matched to the dish name. Polling does not start a remote image search. Attributes include author, license and source when available. Illustrative images do not certify what the dish looks like.
 
@@ -45,8 +46,49 @@ cards:
       - sensor.dispensa_lotti_in_scadenza
       - sensor.dispensa_prodotti_sotto_il_minimo
       - sensor.dispensa_articoli_da_acquistare
+      - sensor.dispensa_prodotti_da_scongelare
       - sensor.dispensa_operazioni_da_verificare
 ```
 
 Attributes are also available in templates and automations. The integration does not approve menus, check off shopping entries or change Grocy. Stock reviews and confirmations remain in Dispensa.
+
+## Example notifications
+
+Create each automation in **Settings → Automations & scenes → Create automation → Edit in YAML**. Replace the example entity IDs with the IDs shown on your installation, especially `notify.phone`, which must be a notify entity. These examples do not install or enable automations by themselves. Each notification runs once at the specified time only when the sensor is available and its count is above zero. `notify.send_message` targets a notify entity; a `notify.mobile_app_*` action has a different name and syntax.
+
+```yaml
+alias: Dispensa - scadenze del mattino
+triggers:
+  - trigger: time
+    at: "08:00:00"
+conditions:
+  - condition: numeric_state
+    entity_id: sensor.dispensa_lotti_in_scadenza
+    above: 0
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.phone
+    data:
+      message: "Controlla in Dispensa i prodotti in scadenza."
+mode: single
+```
+
+```yaml
+alias: Dispensa - promemoria scongelamento
+triggers:
+  - trigger: time
+    at: "18:00:00"
+conditions:
+  - condition: numeric_state
+    entity_id: sensor.dispensa_prodotti_da_scongelare
+    above: 0
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.phone
+    data:
+      message: "Controlla in Dispensa i prodotti da scongelare per i prossimi pasti."
+mode: single
+```
 

@@ -10,7 +10,7 @@ from .const import DOMAIN
 
 async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(DispensaSensor(entry, key) for key in (
-        'lunch', 'dinner', 'products', 'expiring', 'expired', 'unknown_expiry', 'low_stock', 'shopping',
+        'lunch', 'dinner', 'products', 'expiring', 'expired', 'unknown_expiry', 'low_stock', 'shopping', 'thaw',
         'leftovers', 'unresolved'))
 
 
@@ -28,6 +28,7 @@ class DispensaSensor(CoordinatorEntity, SensorEntity):
                            'expiring': 'mdi:calendar-alert', 'expired': 'mdi:calendar-remove',
                            'low_stock': 'mdi:cart-arrow-down',
                            'shopping': 'mdi:cart-outline',
+                           'thaw': 'mdi:snowflake-melt',
                            'unknown_expiry': 'mdi:calendar-question', 'leftovers': 'mdi:food-takeout-box',
                            'unresolved': 'mdi:alert-circle-outline'}[key]
 
@@ -39,6 +40,8 @@ class DispensaSensor(CoordinatorEntity, SensorEntity):
             return (self.coordinator.data.get('inventory') or {}).get(self.key) is not None
         if self.key == 'shopping':
             return self.coordinator.data.get('shopping') is not None
+        if self.key == 'thaw':
+            return self.coordinator.data.get('thaw') is not None
         return True
 
     @property
@@ -53,6 +56,8 @@ class DispensaSensor(CoordinatorEntity, SensorEntity):
             return data['unresolved_operations']
         if self.key == 'shopping':
             return sum(not item['checked'] for item in (data.get('shopping') or {}).get('items', []))
+        if self.key == 'thaw':
+            return len(data.get('thaw') or [])
         value = (data.get('inventory') or {}).get(self.key)
         return len(value) if isinstance(value, list) else value
 
@@ -88,4 +93,7 @@ class DispensaSensor(CoordinatorEntity, SensorEntity):
         if self.key == 'shopping':
             result = data.get('shopping') or {}
             return {'prodotti': result.get('items', []), 'stato_menu': result.get('plan_status')}
+        if self.key == 'thaw':
+            return {'prodotti': data.get('thaw') or []}
         return {}
+

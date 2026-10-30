@@ -1,13 +1,12 @@
 {
   "domain": "dispensa",
   "name": "Dispensa",
-  "codeowners": [
-    "@giuseppe99barchetta"
-  ],
+  "codeowners": ["@giuseppe99barchetta"],
   "config_flow": true,
   "documentation": "https://github.com/giuseppe99barchetta/dispensa-home-assistant",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/giuseppe99barchetta/dispensa-home-assistant/issues",
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
+
