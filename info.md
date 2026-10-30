@@ -1,7 +1,10 @@
-# Dispensa per Home Assistant
+![Dispensa icon](https://raw.githubusercontent.com/giuseppe99barchetta/dispensa-home-assistant/main/custom_components/dispensa/brand/icon.png)
 
-Integrazione locale in sola lettura per la dashboard e le automazioni di Home Assistant. Espone pranzo e cena con immagini e dettagli della ricetta, scadenze, prodotti sotto il minimo, lista della spesa, preparazioni disponibili e operazioni da verificare.
+# Dispensa for Home Assistant
 
-Richiede un server Dispensa aggiornato e raggiungibile da Home Assistant. HACS installa solo l'integrazione: Dispensa va installata e aggiornata separatamente. Dopo il download, riavvia Home Assistant e aggiungi **Dispensa** da **Impostazioni → Dispositivi e servizi**.
+Local, read-only integration for Home Assistant dashboards and automations. It exposes lunch and dinner with images and recipe details, expiry alerts, low stock, the shopping list, available preparations, and operations requiring review.
 
-La [guida completa](https://github.com/giuseppe99barchetta/dispensa-home-assistant) descrive configurazione, sensori e immagini.
+Requires an up-to-date Dispensa server reachable from Home Assistant. HACS installs only the integration; install and update Dispensa separately. After downloading, restart Home Assistant and add **Dispensa** under **Settings → Devices & services**.
+
+See the [full guide](https://github.com/giuseppe99barchetta/dispensa-home-assistant) for setup, sensors, and images.
+
