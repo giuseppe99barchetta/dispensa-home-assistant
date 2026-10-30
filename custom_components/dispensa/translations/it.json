@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {"user": {"title": "Collega Dispensa", "description": "Inserisci l'indirizzo di Dispensa raggiungibile da Home Assistant.", "data": {"url": "Indirizzo di Dispensa"}}},
+    "error": {"cannot_connect": "Impossibile collegarsi a Dispensa o API non compatibile.", "invalid_url": "Inserisci un indirizzo HTTP o HTTPS valido."},
+    "abort": {"already_configured": "Questo indirizzo è già configurato."}
+  },
+  "entity": {"sensor": {
+    "lunch": {"name": "Pranzo di oggi"}, "dinner": {"name": "Cena di oggi"},
+    "products": {"name": "Prodotti in dispensa"}, "expiring": {"name": "Lotti in scadenza"},
+    "expired": {"name": "Lotti scaduti"}, "unknown_expiry": {"name": "Lotti con scadenza sconosciuta"}, "low_stock": {"name": "Prodotti sotto il minimo"},
+    "shopping": {"name": "Articoli da acquistare"}, "leftovers": {"name": "Preparazioni disponibili"}, "unresolved": {"name": "Operazioni da verificare"}
+  }}
+}
