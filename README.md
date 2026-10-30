@@ -1,31 +1,35 @@
-# Integrazione Home Assistant
+# Dispensa for Home Assistant
 
-Dispensa include un'integrazione personalizzata, locale e in sola lettura. Non richiede MQTT né il token Home Assistant usato per le notifiche in uscita. L'integrazione interroga `/api/home-assistant` ogni 5 minuti; i cambiamenti di menu possono comparire entro il successivo aggiornamento. Le date sono quelle del server Dispensa: configurare lo stesso fuso orario su Dispensa e Home Assistant.
+![Dispensa icon](https://raw.githubusercontent.com/giuseppe99barchetta/dispensa-home-assistant/main/custom_components/dispensa/brand/icon.png)
 
-## Installazione con HACS
+Dispensa provides a local, read-only custom integration. It requires neither MQTT nor the Home Assistant token used for outgoing notifications. It polls `/api/home-assistant` every five minutes, so menu changes appear at the next refresh. Dates follow the Dispensa server: configure the same time zone on both servers.
 
-HACS può scaricare soltanto repository GitHub pubblici. Il componente richiede Home Assistant 2024.5 o successivo; la versione effettivamente installata deve ancora essere verificata sul proprio impianto.
+## Install with HACS
 
-1. Aggiornare il servizio Dispensa con questa versione tramite la procedura abituale. Non creare una seconda istanza dello stack.
-2. In HACS aprire il menu **⋮ → Repository personalizzati**. Inserire `https://github.com/giuseppe99barchetta/dispensa-home-assistant`, scegliere la categoria **Integrazione** e aggiungerlo.
-3. Cercare **Dispensa** in HACS e scaricare l'integrazione. Se la versione proposta non contiene ancora queste modifiche, selezionare il ramo predefinito dopo la pubblicazione del codice su GitHub. HACS installa solo il componente Home Assistant: il server Dispensa si aggiorna separatamente.
-4. Riavviare Home Assistant. Andare in **Impostazioni → Dispositivi e servizi → Aggiungi integrazione**, cercare **Dispensa** e inserire l'indirizzo HTTP o HTTPS raggiungibile da Home Assistant, ad esempio `http://192.168.1.10:9284`. Non usare `localhost` se Dispensa è in un altro container o dispositivo. L'indirizzo può includere un percorso di base del proxy.
-5. Aprire il dispositivo Dispensa creato dall'integrazione e aggiungere le entità desiderate alla dashboard. I nomi effettivi degli ID sono visibili nella pagina di ciascuna entità.
+The integration requires Home Assistant 2024.5 or later. Your installed version and connection must still be verified on your own system.
 
-L'integrazione si aggiunge come repository personalizzato: non è automaticamente presente nel catalogo predefinito di HACS. Il repository e le modifiche devono essere disponibili su GitHub per poter essere scaricati. In alternativa si può copiare manualmente `custom_components/dispensa` in `<configurazione Home Assistant>/custom_components/dispensa`, mantenendo tutti i file e le sottocartelle, e poi riavviare Home Assistant.
+1. Update the Dispensa service using your usual procedure. Do not create a second instance of the stack.
+2. In HACS, open **⋮ → Custom repositories**, enter `https://github.com/giuseppe99barchetta/dispensa-home-assistant`, select **Integration**, and add it.
+3. Find **Dispensa** in HACS and download it. HACS installs only the Home Assistant component; update the Dispensa server separately.
+4. Restart Home Assistant. Under **Settings → Devices & services → Add integration**, select **Dispensa** and enter its address reachable from Home Assistant, for example `http://192.168.1.10:9284`. Do not use `localhost` when Dispensa runs in another container or device. A reverse-proxy base path is supported.
+5. Open the new Dispensa device and add its entities to your dashboard. Find their actual entity IDs on their respective entity pages.
 
-Come per la dashboard, l'API non richiede password: renderla raggiungibile solo dalla rete fidata o proteggerla sul proxy. Se si usa HTTPS con una CA privata, Home Assistant deve considerare attendibile il certificato. Le immagini mostrate con `entity_picture` sono caricate dal browser o dalla Companion App: l'indirizzo configurato deve essere raggiungibile anche dal dispositivo che visualizza la dashboard. Con HTTPS evitare immagini servite in HTTP, che il browser potrebbe bloccare.
+This is a custom repository, not an entry in the default HACS catalog. Alternatively, copy `custom_components/dispensa` to `<Home Assistant configuration>/custom_components/dispensa`, including all files and subdirectories, and restart Home Assistant.
 
-## Entità
+Like the dashboard, the API has no password: restrict access to a trusted network or protect it at the proxy. Home Assistant must trust the certificate when HTTPS uses a private CA. Images from `entity_picture` are loaded by the browser or Companion App, so the configured address must also be reachable from the viewing device. Browsers may block HTTP images on an HTTPS dashboard.
 
-- **Pranzo di oggi** e **Cena di oggi**: titolo e immagine, con data, stato, stato del menu, inclusione, porzioni, ingredienti, istruzioni, tempo stimato e nutrizione stimata per porzione negli attributi. Un pasto singolo scelto sostituisce quello del menu. Il menu in bozza è indicato come tale; uno slot escluso risulta «Non previsto». Gli stati `done`, `skipped`, `prepared`, `applying` e `needs-review` conservano il significato registrato da Dispensa.
-- **Prodotti in dispensa**, **Lotti in scadenza**, **Lotti scaduti**, **Lotti con scadenza sconosciuta** e **Prodotti sotto il minimo**: conteggi aggiornati da Grocy. La finestra di scadenza comprende oggi e i tre giorni successivi; le liste dei lotti e dei prodotti sotto il minimo sono negli attributi. La scadenza sconosciuta non è trattata come scaduta. Se Grocy non risponde, i sensori interessati diventano non disponibili, senza mostrare uno zero fittizio.
-- **Preparazioni disponibili** e **Operazioni da verificare**: preparazioni con porzioni residue e righe di operazioni sospese o in corso. Il secondo conteggio è quello delle righe rilevate dalle categorie dello stato di Dispensa, non necessariamente di operazioni distinte.
-- **Articoli da acquistare**: numero di righe non spuntate e lista negli attributi, ricalcolata per il menu corrente con le scorte aggiornate. Senza menu corrente o se Grocy non risponde il sensore è non disponibile; la consultazione non modifica la lista.
+Home Assistant 2026.3 and later can use the bundled `brand` icon. Some HACS versions still show a placeholder in the integration list because they request icons from a separate brand service. The icon in this page does not change that HACS behavior.
 
-L'immagine usa quella scelta nella ricetta, quella già trovata nella cache di Dispensa, oppure una foto indicativa del catalogo incluso nell'app, scelta in base al nome del piatto. La ricerca remota delle foto non viene avviata dal polling. Gli attributi riportano autore, licenza e fonte quando disponibili; le immagini indicative non certificano l'aspetto del piatto.
+## Entities
 
-Ad esempio, sostituendo gli ID con quelli effettivamente creati, una scheda della dashboard può usare:
+- **Today's lunch** and **Today's dinner**: title and picture, with date, status, menu status, inclusion, servings, ingredients, instructions, estimated time and estimated nutrition per serving in the attributes. A selected single meal replaces the planned meal. Draft status is retained; an excluded slot shows “Non previsto”. The statuses `done`, `skipped`, `prepared`, `applying` and `needs-review` retain their meanings in Dispensa.
+- **Pantry products**, **expiring lots**, **expired lots**, **lots with unknown expiry** and **products below minimum**: counts from Grocy. Expiring means today through the following three days. Lists of lots and low-stock products are available as attributes. Unknown expiry is never treated as expired. When Grocy is unavailable, affected sensors become unavailable instead of reporting a misleading zero.
+- **Available preparations** and **operations to review**: preparations with remaining portions and rows representing pending or interrupted operations. The latter counts rows across Dispensa status categories, not necessarily distinct operations.
+- **Items to buy**: count of unchecked entries and the list as an attribute, recalculated for the current menu using current stock. The sensor is unavailable without a current menu or when Grocy is unreachable. Reading it does not change the list.
+
+Meal pictures come from the recipe's selected photo, the existing Dispensa photo cache, or a representative image from the bundled catalog matched to the dish name. Polling does not start a remote image search. Attributes include author, license and source when available. Illustrative images do not certify what the dish looks like.
+
+For example, replace these IDs with the actual ones created on your system:
 
 ```yaml
 type: vertical-stack
@@ -44,4 +48,5 @@ cards:
       - sensor.dispensa_operazioni_da_verificare
 ```
 
-Gli attributi sono utilizzabili anche nei template e nelle automazioni. L'integrazione non approva menu, non spunta la lista della spesa e non modifica Grocy. La revisione delle scorte e le conferme rimangono in Dispensa.
+Attributes are also available in templates and automations. The integration does not approve menus, check off shopping entries or change Grocy. Stock reviews and confirmations remain in Dispensa.
+
