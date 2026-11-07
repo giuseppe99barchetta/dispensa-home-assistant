@@ -1,0 +1,78 @@
+mark_eaten:
+  name: Segna pasto come mangiato
+  description: >-
+    Registra in Dispensa che il pranzo o la cena sono stati mangiati (o toglie il segno). Registra solo l'esito del
+    pasto: le scorte di Grocy non vengono mai modificate, per quelle usa "Ho cucinato" in Dispensa.
+  fields:
+    meal:
+      name: Pasto
+      description: Pranzo o cena.
+      required: true
+      example: lunch
+      selector:
+        select:
+          options:
+            - label: Pranzo
+              value: lunch
+            - label: Cena
+              value: dinner
+    eaten:
+      name: Mangiato
+      description: Attivo per segnare il pasto come mangiato, spento per annullare.
+      default: true
+      selector:
+        boolean:
+    date:
+      name: Data
+      description: Giorno del pasto. Se vuota, il giorno corrente di Dispensa.
+      required: false
+      selector:
+        date:
+rate_meal:
+  name: Valuta pasto
+  description: >-
+    Valuta da 1 a 5 stelle il pranzo o la cena (e lo segna come mangiato). Si può cambiare in seguito.
+    Non modifica le scorte di Grocy.
+  fields:
+    meal:
+      name: Pasto
+      description: Pranzo o cena.
+      required: true
+      example: dinner
+      selector:
+        select:
+          options:
+            - label: Pranzo
+              value: lunch
+            - label: Cena
+              value: dinner
+    rating:
+      name: Stelle
+      description: Valutazione da 1 a 5 (da 3 in su equivale a "lo rifarei").
+      required: true
+      example: 4
+      selector:
+        number:
+          min: 1
+          max: 5
+          step: 1
+          mode: slider
+    tags:
+      name: Tag
+      description: "Fino a 6 etichette brevi, ad esempio Rifarei, Troppo salato, Porzione piccola, Porzione grande, Troppo lungo."
+      required: false
+      example: '["Rifarei", "Troppo salato"]'
+      selector:
+        object:
+    note:
+      name: Nota
+      description: Nota facoltativa, massimo 200 caratteri.
+      required: false
+      selector:
+        text:
+    date:
+      name: Data
+      description: Giorno del pasto. Se vuota, il giorno corrente di Dispensa.
+      required: false
+      selector:
+        date:

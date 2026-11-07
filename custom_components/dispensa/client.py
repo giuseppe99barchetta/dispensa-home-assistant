@@ -1,4 +1,4 @@
-"""Read Dispensa's local, read-only Home Assistant endpoint."""
+"""Read Dispensa's local Home Assistant snapshot and record meal outcomes (never stock)."""
 from urllib.parse import urlsplit
 
 import aiohttp
@@ -40,3 +40,23 @@ class DispensaClient:
             return data
         except (aiohttp.ClientError, TimeoutError, ValueError) as exc:
             raise DispensaError("Impossibile leggere Dispensa") from exc
+
+    async def set_eaten(self, date, meal, eaten, rating=None, tags=None, note=None):
+        """Record a meal as eaten (or not) and optionally rate it. Dispensa never touches Grocy stock here."""
+        body = {"date": date, "meal": meal, "eaten": eaten}
+        for key, value in (("rating", rating), ("tags", tags), ("note", note)):
+            if value is not None:
+                body[key] = value
+        try:
+            async with self.session.post(self.url + "/api/meal/eaten", json=body, allow_redirects=False,
+                                         timeout=aiohttp.ClientTimeout(total=20)) as response:
+                try:
+                    data = await response.json()
+                except (aiohttp.ClientError, ValueError):
+                    data = {}
+                if response.status >= 400:
+                    detail = data.get("error") if isinstance(data, dict) else None
+                    raise DispensaError(detail or "Dispensa ha rifiutato la richiesta (%s)" % response.status)
+                return data
+        except (aiohttp.ClientError, TimeoutError) as exc:
+            raise DispensaError("Impossibile contattare Dispensa") from exc

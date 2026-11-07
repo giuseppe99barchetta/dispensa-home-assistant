@@ -80,12 +80,15 @@ class DispensaSensor(CoordinatorEntity, SensorEntity):
                 return {'data': data['date']}
             meal = item['meal']
             photo = item['photo']
+            eaten = item.get('eaten') or {}
             return {'data': data['date'], 'stato': item['status'], 'stato_menu': item['plan_status'],
                     'incluso': meal.get('included', True), 'porzioni': meal.get('servings'),
                     'ingredienti': meal.get('ingredients', []), 'istruzioni': meal.get('instructions'),
                     'minuti_stimati': meal.get('estimated_minutes'), 'nutrizione_per_porzione': meal.get('nutrition'),
                     'foto_autore': photo.get('author'), 'foto_licenza': photo.get('license'),
-                    'foto_fonte': photo.get('source_url')}
+                    'foto_fonte': photo.get('source_url'),
+                    'mangiato': eaten.get('eaten', False), 'valutazione': eaten.get('rating'),
+                    'tag': eaten.get('tags', []), 'mangiato_il': eaten.get('eaten_at')}
         if self.key in ('expiring', 'expired', 'low_stock'):
             return {'prodotti': (data.get('inventory') or {}).get(self.key, [])}
         if self.key == 'leftovers':

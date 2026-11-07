@@ -2,7 +2,7 @@
 
 ![Dispensa icon](https://raw.githubusercontent.com/giuseppe99barchetta/dispensa-home-assistant/main/custom_components/dispensa/brand/icon.png)
 
-Dispensa provides a local, read-only custom integration. It requires neither MQTT nor the Home Assistant token used for outgoing notifications. It polls `/api/home-assistant` every five minutes, so menu changes appear at the next refresh. Dates follow the Dispensa server: configure the same time zone on both servers.
+Dispensa provides a local custom integration. It reads data and, through two services, records meal outcomes (eaten and rating) only: it never changes Grocy stock. It requires neither MQTT nor the Home Assistant token used for outgoing notifications. It polls `/api/home-assistant` every five minutes, so menu changes appear at the next refresh. Dates follow the Dispensa server: configure the same time zone on both servers.
 
 ## Install with HACS
 
@@ -50,7 +50,25 @@ cards:
       - sensor.dispensa_operazioni_da_verificare
 ```
 
-Attributes are also available in templates and automations. The integration does not approve menus, check off shopping entries or change Grocy. Stock reviews and confirmations remain in Dispensa.
+Attributes are also available in templates and automations. The integration does not approve menus, check off shopping entries or change Grocy. Stock reviews and confirmations remain in Dispensa. The only writes are the two meal-outcome services below.
+
+## Services: eaten and rating
+
+Today's lunch and dinner sensors expose the attributes `mangiato` (true/false), `valutazione` (1 to 5 or null), `tag` (list) and `mangiato_il` (ISO time or null).
+
+- `dispensa.mark_eaten`: `meal` (`lunch` or `dinner`), `eaten` (boolean, default `true`; `false` clears the mark and its rating), `date` (optional, default: today on the Dispensa server).
+- `dispensa.rate_meal`: `meal`, `rating` (integer 1 to 5; 3 or more counts as "rifarei"), `tags` (optional list of up to 6 short strings, for example `Rifarei`, `Troppo salato`, `Porzione piccola`, `Porzione grande`, `Troppo lungo`), `note` (optional, up to 200 characters), `date` (optional). It also marks the meal as eaten and can be called again to change the rating.
+
+They only record the outcome in Dispensa. Stock is deducted solely by the "Ho cucinato" dialog in Dispensa. Dispensa rejects meals that are not in the current menu, so errors appear as Home Assistant service errors.
+
+```yaml
+action: dispensa.rate_meal
+data:
+  meal: dinner
+  rating: 4
+  tags: ["Rifarei", "Porzione piccola"]
+```
+
 
 ## Example notifications
 
