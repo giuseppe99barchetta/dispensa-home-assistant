@@ -54,7 +54,7 @@ Attributes are also available in templates and automations. The integration does
 
 ## Services: eaten and rating
 
-Today's lunch and dinner sensors expose the attributes `mangiato` (true/false), `valutazione` (1 to 5 or null), `tag` (list) and `mangiato_il` (ISO time or null).
+Today's lunch and dinner sensors expose the attributes `mangiato` (true/false), `valutazione` (1 to 5 or null), `tag` (list) and `mangiato_il` (ISO time or null) and `origine` (`app` when cooked in the Dispensa app, `dashboard` when marked from the tablet, null when not eaten).
 
 - `dispensa.mark_eaten`: `meal` (`lunch` or `dinner`), `eaten` (boolean, default `true`; `false` clears the mark and its rating), `date` (optional, default: today on the Dispensa server).
 - `dispensa.rate_meal`: `meal`, `rating` (integer 1 to 5; 3 or more counts as "rifarei"), `tags` (optional list of up to 6 short strings, for example `Rifarei`, `Troppo salato`, `Porzione piccola`, `Porzione grande`, `Troppo lungo`), `note` (optional, up to 200 characters), `date` (optional). It also marks the meal as eaten and can be called again to change the rating.

@@ -88,7 +88,7 @@ class DispensaSensor(CoordinatorEntity, SensorEntity):
                     'foto_autore': photo.get('author'), 'foto_licenza': photo.get('license'),
                     'foto_fonte': photo.get('source_url'),
                     'mangiato': eaten.get('eaten', False), 'valutazione': eaten.get('rating'),
-                    'tag': eaten.get('tags', []), 'mangiato_il': eaten.get('eaten_at')}
+                    'tag': eaten.get('tags', []), 'mangiato_il': eaten.get('eaten_at'), 'origine': eaten.get('origin')}
         if self.key in ('expiring', 'expired', 'low_stock'):
             return {'prodotti': (data.get('inventory') or {}).get(self.key, [])}
         if self.key == 'leftovers':
